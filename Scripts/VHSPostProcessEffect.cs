@@ -17,9 +17,6 @@ public class VHSPostProcessEffect : PostEffectsBase {
 	}
 
 	void OnRenderImage(RenderTexture source, RenderTexture destination){
-		m.SetFloat("_yScanline", yScanline);
-		m.SetFloat("_xScanline", xScanline);
-
 		yScanline += Time.deltaTime * 0.1f;
 		xScanline -= Time.deltaTime * 0.1f;
 
@@ -29,6 +26,8 @@ public class VHSPostProcessEffect : PostEffectsBase {
 		if(xScanline <= 0 || Random.value < 0.05){
 			xScanline = Random.value;
 		}
+		m.SetFloat("_yScanline", yScanline);
+		m.SetFloat("_xScanline", xScanline);
 		Graphics.Blit(source, destination, m);
 	}
 }
