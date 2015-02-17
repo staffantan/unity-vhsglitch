@@ -17,11 +17,11 @@ public class VHSPostProcessEffect : PostEffectsBase {
 	}
 
 	void OnRenderImage(RenderTexture source, RenderTexture destination){
-		yScanline += Time.deltaTime * 0.1f;
+		yScanline += Time.deltaTime * 0.01f;
 		xScanline -= Time.deltaTime * 0.1f;
 
 		if(yScanline >= 1){
-			yScanline = Random.value;
+			yScanline = 0;
 		}
 		if(xScanline <= 0 || Random.value < 0.05){
 			xScanline = Random.value;
