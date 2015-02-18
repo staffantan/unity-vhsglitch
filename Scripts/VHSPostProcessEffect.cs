@@ -21,7 +21,7 @@ public class VHSPostProcessEffect : PostEffectsBase {
 		xScanline -= Time.deltaTime * 0.1f;
 
 		if(yScanline >= 1){
-			yScanline = 0;
+			yScanline = Random.value;
 		}
 		if(xScanline <= 0 || Random.value < 0.05){
 			xScanline = Random.value;

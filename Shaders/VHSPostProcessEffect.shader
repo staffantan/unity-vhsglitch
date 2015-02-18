@@ -30,14 +30,19 @@
 				float dx = 1-abs(distance(i.uv.y, _xScanline));
 				float dy = 1-abs(distance(i.uv.y, _yScanline));
 				
-				i.uv.x += dy * 0.025;
+				//float x = ((int)(i.uv.x*320))/320.0;
+				dy = ((int)(dy*15))/15.0;
+				dy = dy;
+				i.uv.x += dy * 0.025 + rand(float3(dy,dy,dy)).r/500;//0.025;
 				
 				float white = (vhs.r+vhs.g+vhs.b)/3;
-				//i.uv.y += step(0.99, dx) * white * dx;
 				
 				if(dx > 0.99)
 					i.uv.y = _xScanline;
 				//i.uv.y = step(0.99, dy) * (_yScanline) + step(dy, 0.99) * i.uv.y;
+				
+				i.uv.x = i.uv.x % 1;
+				i.uv.y = i.uv.y % 1;
 				
 				fixed4 c = tex2D (_MainTex, i.uv);
 				
