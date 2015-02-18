@@ -20,7 +20,10 @@
 			
 			float _yScanline;
 			float _xScanline;
-			
+			float rand(float3 co){
+			     return frac(sin( dot(co.xyz ,float3(12.9898,78.233,45.5432) )) * 43758.5453);
+			}
+ 
 			fixed4 frag (v2f_img i) : COLOR{
 				fixed4 vhs = tex2D (_VHSTex, i.uv);
 				
@@ -48,6 +51,10 @@
 					vhs += fixed4(bleed * _xScanline, 0, 0, 0);
 				}
 				
+				float x = ((int)(i.uv.x*320))/320.0;
+				float y = ((int)(i.uv.y*240))/240.0;
+				
+				c -= rand(float3(x, y, _xScanline)) * _xScanline / 5;
 				return c + vhs;
 			}
 			ENDCG
