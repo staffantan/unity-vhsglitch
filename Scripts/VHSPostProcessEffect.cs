@@ -1,51 +1,56 @@
-﻿using UnityEngine;
-using System.Collections;
+using UnityEngine;
+using UnityEngine.Video;
 
-[RequireComponent (typeof(Camera))]
-public class VHSPostProcessEffect : PostEffectsBase {
-	static Material m_Material = null;
-	protected Material material {
-		get {
-			if (m_Material == null) {
-				m_Material = new Material(shader);
-				m_Material.SetTexture("_VHSTex", VHS);
-				m_Material.hideFlags = HideFlags.DontSave;
-			}
-			return m_Material;
-		} 
-	}
-
+[ExecuteInEditMode]
+[AddComponentMenu("Image Effects/GlitchEffect")]
+[RequireComponent(typeof(Camera))]
+[RequireComponent(typeof(VideoPlayer))]
+public class VHSPostProcessEffect : MonoBehaviour
+{
 	public Shader shader;
-	public MovieTexture VHS;
+	public VideoClip VHSClip;
 
-	float yScanline, xScanline;
+	private float _yScanline;
+	private float _xScanline;
+	private Material _material = null;
+	private VideoPlayer _player;
 
-	public override void Start() {
-		//m = new Material(shader);
-		//m.SetTexture("_VHSTex", VHS);
-		//m.hideFlags = HideFlags.DontSave;
-		VHS.loop = true;
-		VHS.Play();
+	void Start()
+	{
+		_material = new Material(shader);
+		_player = GetComponent<VideoPlayer>();
+		_player.isLooping = true;
+		_player.renderMode = VideoRenderMode.APIOnly;
+		_player.audioOutputMode = VideoAudioOutputMode.None;
+		_player.clip = VHSClip;
+		_player.Play();
 	}
 
-	void OnRenderImage(RenderTexture source, RenderTexture destination){
-		yScanline += Time.deltaTime * 0.01f;
-		xScanline -= Time.deltaTime * 0.1f;
+	void OnRenderImage(RenderTexture source, RenderTexture destination)
+	{
+		_material.SetTexture("_VHSTex", _player.texture);
 
-		if(yScanline >= 1){
-			yScanline = Random.value;
+		_yScanline += Time.deltaTime * 0.01f;
+		_xScanline -= Time.deltaTime * 0.1f;
+
+		if (_yScanline >= 1)
+		{
+			_yScanline = Random.value;
 		}
-		if(xScanline <= 0 || Random.value < 0.05){
-			xScanline = Random.value;
+		if (_xScanline <= 0 || Random.value < 0.05)
+		{
+			_xScanline = Random.value;
 		}
-		material.SetFloat("_yScanline", yScanline);
-		material.SetFloat("_xScanline", xScanline);
-		Graphics.Blit(source, destination, material);
+		_material.SetFloat("_yScanline", _yScanline);
+		_material.SetFloat("_xScanline", _xScanline);
+		Graphics.Blit(source, destination, _material);
 	}
 
-	protected void OnDisable() {
-		if( m_Material ) {
-			DestroyImmediate( m_Material );
+	protected void OnDisable()
+	{
+		if (_material)
+		{
+			DestroyImmediate(_material);
 		}
-	}	
+	}
 }
