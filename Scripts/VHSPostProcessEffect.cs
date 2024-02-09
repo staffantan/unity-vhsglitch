@@ -15,7 +15,7 @@ public class VHSPostProcessEffect : MonoBehaviour
 	private Material _material = null;
 	private VideoPlayer _player;
 
-	void Start()
+	void OnEnable()
 	{
 		_material = new Material(shader);
 		_player = GetComponent<VideoPlayer>();
